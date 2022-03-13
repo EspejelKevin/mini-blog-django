@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+    Update Post
+{% endblock title %}
+
+{% block content %}
+    <div class="container">
+        <h1>Page {{ view_type }}</h1>
+        <form method="POST" enctype="multipart/form-data" class="mt-3">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button class="btn btn-success mt-3" type="submit">{{ view_type.capitalize }}</button>
+        </form>
+        
+    </div>
+{% endblock content %}

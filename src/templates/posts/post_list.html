@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Posts
+{% endblock title %}
+
+{% block content %}
+    <div class="container">
+        <h1>Posts</h1>
+        <h2 class="mb-5">What's on your mind?</h2>
+        <div class="row">
+            {% for object in object_list %}
+            <div class="col-4">
+                <div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('{{object.thumbnail.url}}'), linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));" id="fondo">
+                    <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+                        <h2 class="pt-3 mt-0 mb-4 display-6 lh-1 fw-bold">{{ object.content|truncatechars:11 }}</h2>
+                        <ul class="d-flex list-unstyled mt-auto">
+                            <li class="me-auto">
+                                <span>{{object.title}}</span>
+                            </li>
+                            <li class="d-flex align-items-center me-3">
+                                <svg class="bi " width="1em" height="1em"><use xlink:href="#geo-fill"/></svg>
+                                <small>Posted: {{object.publish_date|timesince}} ago</small>
+                            </li>
+                            <li class="d-flex align-items-center">
+                                <svg class="bi " width="1em" height="1em"><use xlink:href="#calendar3"/></svg>
+                                <small>Author: {{object.author}}</small>
+                            </li>
+                        </ul>
+                        <p>
+                            <span class="me-1"><i class="fa fa-solid fa-eye me-1"></i>{{ object.get_view_count }}</span>
+                            <span class="me-1"><i class="fa fa-solid fa-thumbs-up me-1"></i>{{ object.get_like_count }}</span>
+                            <span class="me-1"><i class="fa fa-solid fa-comment me-1"></i>{{ object.get_comment_count }}</span>
+                        </p>
+                    </div>
+                </div>
+                <a href="{{ object.get_absolute_url }}" class="btn btn-warning mt-2">Details</a>
+                <a href="{% url 'delete' object.slug %}" class="btn btn-danger mt-2">Delete</a>
+                <a href="{% url 'update' object.slug %}" class="btn btn-primary mt-2">Update</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock content %}

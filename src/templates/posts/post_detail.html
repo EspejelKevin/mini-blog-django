@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+    Detail Post
+{% endblock title %}
+
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <h1 class="text-center mb-5">Details {{ object.title }}</h1>
+            <div class="col-auto">
+                <div class="card border border-success border-3" style="width: 30rem;">
+                    <img src="{{ object.thumbnail.url }}" class="card-img-top post-img" alt="img-post">
+                    <div class="card-body text-center">
+                      <h6 class="card-title">{{ object.title }}</h6>
+                      <p class="card-text">{{ object.content }}</p>
+                      <p>
+                        <span class="me-1"><i class="fa fa-solid fa-eye me-1"></i>{{ object.get_view_count }}</span>
+                        <span class="me-1"><i class="fa fa-solid fa-thumbs-up me-1"></i>{{ object.get_like_count }}</span>
+                        <span class="me-5"><i class="fa fa-solid fa-comment me-1"></i>{{ object.get_comment_count }}</span>
+                        <small class="ms-5">Posted: {{object.publish_date|timesince}} ago</small>
+                      </p>
+                    </div>
+                </div>
+                <div class="card-footer border border-secondary border-3 rounded">
+                    <h6>Do you like it? Give it a like 😄</h6>
+                    <a href="{{ object.get_like_url }}" class="text-muted" style="text-decoration: none;">
+                        <small><i class="fa fa-solid fa-thumbs-up fa-lg"></i> {{ object.get_like_count }}</small>
+                    </a>
+                   
+                </div>
+                <a href="{% url 'list' %}" class="btn btn-primary text-white mt-2" style="text-decoration: none;">
+                    <small>Back posts</small>
+                </a>
+                {% if request.user.is_authenticated %}
+                    <h4 class="mt-3">Leave a comment below</h4>
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <button class="btn btn-success" type="submit"><small>Comment</small></button>
+                    </form>
+                    <h5 class="mt-3">Comments</h5>
+                    {% for comment in object.comments %}
+                        <div class="mb-3">
+                            <p class="mb-0">{{ comment.content }}</p>
+                            <small>{{ comment.timestamp|timesince }} ago</small>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <a href="{% url 'account_login' %}" class="btn btn-primary btn-block">Login to comment</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .post-img{
+            height: 10rem;
+            width: 10rem;
+            display: block;
+            margin: auto;
+        }
+    </style>
+{% endblock content %}
+
